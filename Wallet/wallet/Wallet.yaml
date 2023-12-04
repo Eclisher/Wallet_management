@@ -1,0 +1,252 @@
+openapi: 3.0.3
+info:
+  title: Wallet Management API
+  version: 1.0.0
+  description: Account, Transaction, and Currency Management
+servers:
+  - url: https://wallet.com
+paths:
+  /accounts:
+    get:
+      tags:
+        - "Accounts"
+      summary: Get the list of all accounts
+      operationId: getAccounts
+      responses:
+        200:
+          $ref: '#/components/responses/AccountsList_200'
+
+    post:
+      tags:
+        - "Accounts"
+      summary: Add a new account
+      operationId: addAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        200:
+          $ref: '#/components/responses/Account_200'
+
+  /accounts/{id}:
+    put:
+      tags:
+        - "Accounts"
+      summary: Update details of an existing account
+      operationId: updateAccount
+      parameters:
+        - in: path
+          name: id
+          description: ID of the account to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        200:
+          $ref: '#/components/responses/Account_200'
+
+  /transactions:
+    get:
+      tags:
+        - "Transactions"
+      summary: Get the list of all transactions
+      operationId: getTransactions
+      responses:
+        200:
+          $ref: '#/components/responses/TransactionsList_200'
+
+    post:
+      tags:
+        - "Transactions"
+      summary: Add a new transaction
+      operationId: addTransaction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        200:
+          $ref: '#/components/responses/Transaction_200'
+
+  /currencies:
+    get:
+      tags:
+        - "Currencies"
+      summary: Get the list of all currencies
+      operationId: getCurrencies
+      responses:
+        200:
+          $ref: '#/components/responses/CurrenciesList_200'
+
+    post:
+      tags:
+        - "Currencies"
+      summary: Add a new currency
+      operationId: addCurrency
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Currency'
+      responses:
+        200:
+          $ref: '#/components/responses/Currency_200'
+
+  /currencies/{id}:
+    put:
+      tags:
+        - "Currencies"
+      summary: Update details of an existing currency
+      operationId: updateCurrency
+      parameters:
+        - in: path
+          name: id
+          description: ID of the currency to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Currency'
+      responses:
+        200:
+          $ref: '#/components/responses/Currency_200'
+
+components:
+  schemas:
+    Currency:
+      type: object
+      properties:
+        currency_id:
+          type: integer
+          format: int64
+          description: The unique identifier for the currency.
+        currency_name:
+          type: string
+          description: The name of the currency.
+        exchange_rate:
+          type: number
+          format: double
+          description: The exchange rate of this currency compared to Ariary (or another reference currency).
+      example:
+        - currency_id: 1
+          currency_name: "EUROS"
+          exchange_rate: 4922.65
+        - currency_id: 2
+          currency_name: "ARIARY"
+          exchange_rate: 1.0
+        - currency_id: 3
+          currency_name: "DOLLAR"
+          exchange_rate: 4118.75
+    Account:
+      type: object
+      properties:
+        account_id:
+          type: integer
+          format: int64
+          description: The unique identifier for the account.
+        user_name:
+          type: string
+          description: The username associated with the account.
+        balance:
+          type: number
+          format: double
+          description: The balance in the account.
+        currency:
+          $ref: '#/components/schemas/Currency'
+      example:
+        - account_id: 1
+          user_name: "Harizo ANDRIANAIVO"
+          balance: 1000.00
+          currency:
+            currency_id: 1
+            currency_name: "ARIARY"
+        - account_id: 2
+          user_name: "Ando RAMANANTSOA"
+          balance: 500.00
+          currency:
+            currency_id: 1
+            currency_name: "ARIARY"
+
+    Transaction:
+      type: object
+      properties:
+        transaction_id:
+          type: integer
+          format: int64
+          description: The unique identifier for the transaction.
+        amount:
+          type: number
+          format: double
+          description: The amount involved in the transaction.
+        account_source_id:
+          type: integer
+          format: int64
+          description: The source account for the transaction.
+        account_destination_id:
+          type: integer
+          format: int64
+          description: The destination account for the transaction.
+      example:
+        - transaction_id: 1
+          amount: 200.00
+          acccount_source_id: 1
+          account_destination_id: 2
+        - transaction_id: 2
+          amount: 50.00
+          acccount_source_id: 2
+          account_destination_id: 1
+
+  responses:
+    AccountsList_200:
+      description: List of accounts
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Account'
+    Account_200:
+      description: Details of the added or updated account
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
+    TransactionsList_200:
+      description: List of transactions
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Transaction'
+    Transaction_200:
+      description: Details of the added transaction
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Transaction'
+    CurrenciesList_200:
+      description: List of currencies
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Currency'
+    Currency_200:
+      description: Details of the added or updated currency
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Currency'
