@@ -1,23 +1,23 @@
 package src.Model;
 
 public class Account {
-    private Long accountId;
+    private int accountId;
     private String userName;
     private double balance;
     private int currency;
 
     public Account(int accountId, String userName, double balance, int currency) {
-        this.accountId = (long) accountId;
+        this.accountId =  accountId;
         this.userName = userName;
         this.balance = balance;
         this.currency = currency;
     }
 
-    public Long getAccountId() {
+    public int getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(Long accountId) {
+    public void setAccountId(int accountId) {
         this.accountId = accountId;
     }
 
