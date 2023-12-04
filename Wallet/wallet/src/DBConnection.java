@@ -19,7 +19,6 @@ public class DBConnection {
                 String user = System.getenv("DB_USER");
                 String password = System.getenv("DB_PASSWORD");
                 connection = DriverManager.getConnection(url, user, password);
-                System.out.println("Connection successful");
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error connecting to the database", e);
