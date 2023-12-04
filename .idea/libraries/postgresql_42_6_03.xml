@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="postgresql-42.6.03">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Wallet/out/production/Wallet/postgresql-42.6.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

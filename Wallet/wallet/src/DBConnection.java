@@ -1,6 +1,5 @@
 package src;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -9,20 +8,21 @@ public class DBConnection {
 
     private static Connection connection;
 
-    public DBConnection() {
+    private DBConnection() {
+        // Private constructor to prevent instantiation
     }
 
     public static Connection getConnection() {
-        if (connection == null) {
-            try {
-                String var0 = System.getenv("DB_URL");
-                String var1 = System.getenv("DB_USER");
-                String var2 = System.getenv("DB_PASSWORD");
-                connection = DriverManager.getConnection(var0, var1, var2);
-                System.out.println("Connection Succes");
-            } catch (SQLException var3) {
-                throw new RuntimeException("Erreur lors de la connexion à la base de données", var3);
+        try {
+            if (connection == null || connection.isClosed()) {
+                String url = System.getenv("DB_URL");
+                String user = System.getenv("DB_USER");
+                String password = System.getenv("DB_PASSWORD");
+                connection = DriverManager.getConnection(url, user, password);
+                System.out.println("Connection successful");
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error connecting to the database", e);
         }
         return connection;
     }
@@ -35,6 +35,8 @@ public class DBConnection {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            connection = null; // Reset connection to force reconnection if needed
         }
     }
 }

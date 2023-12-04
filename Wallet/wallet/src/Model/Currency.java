@@ -1,19 +1,19 @@
 package src.Model;
 
 public class Currency {
-    private Long currencyId;
+    private int  currencyId;
     private String currencyName;
 
-    public Currency(Long currencyId, String currencyName) {
+    public Currency(int currencyId, String currencyName) {
         this.currencyId = currencyId;
         this.currencyName = currencyName;
     }
 
-    public Long getCurrencyId() {
+    public int getCurrencyId() {
         return currencyId;
     }
 
-    public void setCurrencyId(Long currencyId) {
+    public void setCurrencyId(int currencyId) {
         this.currencyId = currencyId;
     }
 

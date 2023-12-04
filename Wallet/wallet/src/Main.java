@@ -1,37 +1,30 @@
 package src;
 
-import org.postgresql.largeobject.BlobOutputStream;
-import src.CrudOperation.AccountCrudOperation;
 import src.CrudOperation.CurrencyCrudOperation;
-import src.CrudOperation.TransactionCrudOperation;
-import src.Model.Account;
 import src.Model.Currency;
-
-import java.nio.channels.AcceptPendingException;
 import java.util.List;
 import java.util.logging.Logger;
-
 public class Main {
     private static final Logger logger = Logger.getLogger(Main.class.getName());
-
-    public Main() {
-    }
     public static void main(String[] args) {
-        AccountCrudOperation var1 = new AccountCrudOperation();
-        CurrencyCrudOperation var2 = new CurrencyCrudOperation();
-        TransactionCrudOperation var3 = new TransactionCrudOperation();
+        CurrencyCrudOperation currencyCrudOperation = new CurrencyCrudOperation();
 
-        //Find All the Account
-        List var4 = var1.findAll();
-        logger.info("All Accounts: " + var4);
+        // Find all Currency
+        List<Currency> currencies = currencyCrudOperation.findAll();
+        logger.info("All Currency: " + currencies);
 
-        //Find all Transaction
-        List var6 = var2.findAll();
-        logger.info("All Transaction: " + var6);
+        // Save a new Currency
+        Currency newCurrency = new Currency(3, "DOLLAR");
+        Currency savedCurrency = currencyCrudOperation.save(newCurrency);
+        logger.info("Saved Currency: " + savedCurrency);
+//
+//        // Delete the Currency by currencyId
+//        long currencyIdToDelete = savedCurrency.getCurrencyId();
+//        currencyCrudOperation.delete(new Currency(4, null));
+//        // Find all Currency after delete
+//        List<Currency> currenciesAfterDelete = currencyCrudOperation.findAll();
+//        logger.info("All Currency after delete: " + currenciesAfterDelete);
 
-        //Find all Currency
-        List var5 = var3.findAll();
-        logger.info("All Currency: " + var5);
 
     }
 }
