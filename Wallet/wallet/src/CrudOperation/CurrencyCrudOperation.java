@@ -71,6 +71,25 @@ public class CurrencyCrudOperation implements CrudOperation<Currency> {
         return toDelete;
     }
 
+    public Currency findById(int currencyId) {
+        Currency currency = null;
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM currency WHERE currency_id = ?");
+        ) {
+            statement.setInt(1, currencyId);
 
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    String currencyName = resultSet.getString("currency_name");
+                    currency = new Currency(currencyId, currencyName);
+                }
+            }
+        } catch (SQLException e) {
+            // Gérer l'erreur de manière appropriée, par exemple, logger ou relancer une exception spécifique.
+            e.printStackTrace();
+        }
+
+        return currency;
+    }
 
 }
