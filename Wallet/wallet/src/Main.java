@@ -63,5 +63,33 @@ public class Main {
 //        //Delete the Transaction by transactionId
 //        int transactionIdDelete = Math.toIntExact(savedTransaction.getTransactionId());
 //        transactionCrudOperation.delete(new Transaction(4, 5000.0, 1, 3));
+
+        // Test findById for Currency
+        int currencyIdToFind = 1; // Replace with the actual currencyId you want to find
+        Currency foundCurrency = currencyCrudOperation.findById(currencyIdToFind);
+        if (foundCurrency != null) {
+            logger.info("Found Currency by Id: " + foundCurrency);
+        } else {
+            logger.info("Currency not found for Id: " + currencyIdToFind);
+        }
+
+        // Test findById for Account
+        int accountIdToFind = 1; // Replace with the actual accountId you want to find
+        Account foundAccount = accountCrudOperation.findById(accountIdToFind);
+        if (foundAccount != null) {
+            logger.info("Found Account by Id: " + foundAccount);
+        } else {
+            logger.info("Account not found for Id: " + accountIdToFind);
+        }
+
+        // Test findById for Transaction
+        int transactionIdToFind = 1; // Replace with the actual transactionId you want to find
+        Transaction foundTransaction = transactionCrudOperation.findById(transactionIdToFind);
+        if (foundTransaction != null) {
+            logger.info("Found Transaction by Id: " + foundTransaction);
+        } else {
+            logger.info("Transaction not found for Id: " + transactionIdToFind);
+        }
+
     }
 }
