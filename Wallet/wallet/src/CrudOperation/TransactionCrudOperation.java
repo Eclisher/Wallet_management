@@ -91,5 +91,27 @@ public class TransactionCrudOperation  implements CrudOperation<Transaction> {
     }
 
 
+    public Transaction findById(int transactionId) {
+        Transaction transaction = null;
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM transaction WHERE transaction_id = ?");
+        ) {
+            statement.setInt(1, transactionId);
 
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    double amount = resultSet.getDouble("amount");
+                    int accountSourceId = resultSet.getInt("account_source_id");
+                    int accountDestinationId = resultSet.getInt("account_destination_id");
+
+                    transaction = new Transaction(transactionId, amount, accountSourceId, accountDestinationId);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Gérer l'erreur de manière appropriée, par exemple, logger ou relancer une exception spécifique.
+        }
+
+        return transaction;
+    }
 }
