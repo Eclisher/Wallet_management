@@ -82,5 +82,27 @@ public class AccountCrudOperation implements CrudOperation<Account> {
         return toDelete;
     }
 
+    public Account findById(int accountId) {
+        Account account = null;
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM account WHERE account_id = ?");
+        ) {
+            statement.setInt(1, accountId);
 
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    String userName = resultSet.getString("user_name");
+                    double balance = resultSet.getDouble("balance");
+                    int currencyId = resultSet.getInt("currency_id");
+
+                    account = new Account(accountId, userName, balance, currencyId);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Gérer l'erreur de manière appropriée (par exemple, journalisation)
+        }
+
+        return account;
+    }
 }
