@@ -19,8 +19,10 @@ public class AccountCrudOperation implements CrudOperation<Account> {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM account");
              ResultSet resultSet = statement.executeQuery()) {
+        
 
             while (resultSet.next()) {
+                /*a éviter */
                 int accountId = resultSet.getInt("account_id");
                 String userName = resultSet.getString("user_name");
                 double balance = resultSet.getDouble("balance");
@@ -29,12 +31,15 @@ public class AccountCrudOperation implements CrudOperation<Account> {
                 Account account = new Account(accountId, userName, balance, currencyId);
                 accounts.add(account);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
-            // Log or print more detailed error information here
-        }
+            
+            
+            /*pas utile */
 
-        return accounts;
+        }       
+    return accounts;
     }
 
     @Override

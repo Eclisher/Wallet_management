@@ -2,7 +2,7 @@
 
 export DB_URL=jdbc:postgresql://localhost:5432/wallet_management
 export DB_USER=postgres
-export DB_PASSWORD=harizo123
+export DB_PASSWORD=0000
 export CLASSPATH=".:postgresql-42.6.0.jar"
 
 javac src/CrudOperation/*.java src/Interface/*.java src/Model/*.java src/*.java

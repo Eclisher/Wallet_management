@@ -11,6 +11,11 @@ STD22007 and STD22050
  - Execute the script.sh with for the command
 $laptop@laptop:~/Wallet_management/Wallet/wallet$ ./compile_and_run.sh   
 
+
+
+
+
+
 ## API Specification
 [Spec API](https://github.com/Eclisher/Wallet_management/blob/main/Wallet/wallet/Wallet.yaml)
 
