@@ -22,5 +22,5 @@ DB_USERNAME=#your postgresql username
 
 ```
 code by : std 22050 : Ramanantsoa Ando N'irina (andoKami)
-          std 22007 : Andrianaivo haingo Harizo (euclisher)
+          std 22007 : Andrianaivo haingo Harizo (eclisher)
 ```
