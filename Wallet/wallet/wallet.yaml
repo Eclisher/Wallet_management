@@ -1,0 +1,358 @@
+openapi: 3.0.3
+info:
+  title: Wallet Management API
+  version: 1.0.0
+  description: Account, Transaction, and Currency Management
+servers:
+  - url: https://wallet.com
+paths:
+  /accounts/{accountId}:
+    get:
+      tags:
+        - "Accounts"
+      summary: Get Account by ID
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          description: The ID of the account to retrieve
+          schema:
+            type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/AccountList_200'
+        '404':
+          description: Account not found
+  /accounts/{accountId}/transactions:
+    post:
+      tags:
+        - "Accounts"
+      summary: Add a transaction to an account
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - in: body
+          name: transaction
+          required: true
+          description: Transaction details
+          schema:
+            $ref: '#/components/schemas/Transaction'
+      responses:
+        '200':
+          $ref: '#/components/responses/AccountList_200'
+        '404':
+          description: Account not found
+
+  /accounts/{accountId}/balance:
+    get:
+      tags:
+        - "Accounts"
+      summary: Get the balance of an account at a specific date and time
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: dateTime
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          $ref: '#/components/responses/BalanceList_200'
+        '404':
+          description: Account not found
+
+  /accounts/{accountId}/balance/history:
+    get:
+      tags:
+        - "Accounts"
+      summary: Get the balance history of an account within a date range
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          $ref: '#/components/responses/BalanceHistoryList_200'
+        '404':
+          description: Account not found
+
+  /accounts/transfer:
+    post:
+      tags:
+        - "Accounts"
+      summary: Transfer money between two accounts
+      requestBody:
+        description: Transfer details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transfer'
+      responses:
+        '200':
+          $ref: '#/components/responses/TransferResultList_200'
+        '404':
+          description: Account transfer not found
+
+  /accounts/transfer/history:
+    get:
+      tags:
+        - "Accounts"
+      summary: Get transfer history within a date range
+      parameters:
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          $ref: '#/components/responses/TransferHistoryResponse_200'
+        '404':
+          description: Account transfer not found
+  /currencies/{currencyId}:
+    get:
+      tags:
+        - "Currency"
+      summary: Get Currency by ID
+      parameters:
+        - name: currencyId
+          in: path
+          required: true
+          description: The ID of the currency to retrieve
+          schema:
+            type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/CurrencyList_200'
+        '404':
+          description: Currency not found
+
+  /transactions/{transactionId}:
+    get:
+      tags:
+        - "Transaction"
+      summary: Get Transaction by ID
+      parameters:
+        - name: transactionId
+          in: path
+          required: true
+          description: The ID of the transaction to retrieve
+          schema:
+            type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/TransactionList_200'
+        '404':
+          description: Transaction not found
+
+components:
+  schemas:
+    Transaction:
+      type: object
+      properties:
+        label:
+          type: string
+        amount:
+          type: number
+        type:
+          type: string
+          enum: [CREDIT, DEBIT]
+        dateTime:
+          type: string
+          format: date-time
+        lastUpdate:
+          type: string
+          format: date-time
+
+    Balance:
+      type: object
+      properties:
+        value:
+          type: number
+        dateTime:
+          type: string
+          format: date-time
+        lastUpdate:
+          type: string
+          format: date-time
+
+    BalanceHistory:
+      type: array
+      items:
+        $ref: '#/components/schemas/Balance'
+
+    Transfer:
+      type: object
+      properties:
+        fromAccountId:
+          type: integer
+        toAccountId:
+          type: integer
+        amount:
+          type: number
+        dateTime:
+          type: string
+          format: date-time
+
+    TransferResult:
+      type: object
+      properties:
+        fromAccount:
+          $ref: '#/components/schemas/Account'
+        toAccount:
+          $ref: '#/components/schemas/Account'
+        dateTime:
+          type: string
+          format: date-time
+
+    TransferHistory:
+      type: array
+      items:
+        type: object
+        properties:
+          fromAccountId:
+            type: integer
+          toAccountId:
+            type: integer
+          amount:
+            type: number
+          dateTime:
+            type: string
+            format: date-time
+    Account:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        balance:
+          type: object
+          properties:
+            value:
+              type: number
+            lastUpdate:
+              type: string
+              format: date-time
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        type:
+          type: string
+          enum: [Banque, Espèce, Mobile Money]
+    Currency:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        code:
+          type: string
+        type:
+          type: string
+          enum: [Banque, Espèce, Mobile Money]
+
+  responses:
+    AccountList_200:
+      description: List of accounts
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Account'
+
+    BalanceList_200:
+      description: List of balance
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Balance'
+    TransactionList_200:
+      description: List of transaction
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Transaction'
+    CurrencyList_200:
+      description: List of currency
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Currency'
+
+    TransferHistoryList_200:
+      description: Succes operation
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/TransferHistory'
+
+    TransferResultList_200:
+      description: Succes Operation
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/TransferResult'
+
+    BalanceHistoryList_200:
+      description: Succes Operation
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/BalanceHistory'
+
+    TransferHistoryResponse_200:
+      description: Success operation
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/TransferHistory'
