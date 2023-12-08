@@ -20,3 +20,7 @@ DB_USERNAME=#your postgresql username
     - [create_transaction_type.sql](resources/create_transaction_type.sql)
     - [create_table_transaction.sql](resources/create_table_transaction.sql)
 
+```
+code by : std 22050 : Ramanantsoa Ando N'irina (andoKami)
+          std 22007 : Andrianaivo haingo Harizo (euclisher)
+```
