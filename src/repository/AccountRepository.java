@@ -6,6 +6,7 @@ import model.*;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +15,10 @@ import java.util.Map;
 @AllArgsConstructor
 public class AccountRepository implements BasicRepository<Account>{
     private final static String
-        TABLE_NAME ="account",
-        NAME_LABEL="name",
-        TYPE_LABEL="type",
-        CURRENCY_LABEL="currency";
+            TABLE_NAME ="account",
+            NAME_LABEL="name",
+            TYPE_LABEL="type",
+            CURRENCY_LABEL="currency";
 
     final private static BalanceRepository balanceRepository = new BalanceRepository();
     final private static TransactionRepository transactionRepository = new TransactionRepository();
@@ -30,12 +31,12 @@ public class AccountRepository implements BasicRepository<Account>{
 
         List<Balance> balanceList = balanceRepository.findAll(balanceFilter);
         return new Account(
-            resultSet.getString(Query.ID_LABEL),
-            resultSet.getString(NAME_LABEL),
-            AccountType.valueOf(resultSet.getString(TYPE_LABEL)),
-            currencyRepository.findAll(currencyFilter).get(0),
-            !balanceList.isEmpty() ? balanceList.get(0) : new Balance("-", BigDecimal.valueOf(0), LocalDateTime.now()),
-            transactionRepository.findAll(transactionFilter)
+                resultSet.getString(Query.ID_LABEL),
+                resultSet.getString(NAME_LABEL),
+                AccountType.valueOf(resultSet.getString(TYPE_LABEL)),
+                currencyRepository.findAll(currencyFilter).get(0),
+                !balanceList.isEmpty() ? balanceList.get(0) : new Balance("-", BigDecimal.valueOf(0), LocalDateTime.now()),
+                transactionRepository.findAll(transactionFilter)
         );
     }
 
@@ -65,10 +66,10 @@ public class AccountRepository implements BasicRepository<Account>{
     @Override
     public Account save(Account toSave, String meta) throws SQLException {
         Map<String,Pair> values = Map.of(
-            Query.ID_LABEL, new Pair(toSave.getId(), true),
-            NAME_LABEL, new Pair(toSave.getName(), true),
-            TYPE_LABEL, new Pair(toSave.getType().toString(),true),
-            CURRENCY_LABEL, new Pair(toSave.getCurrency().getId(), true)
+                Query.ID_LABEL, new Pair(toSave.getId(), true),
+                NAME_LABEL, new Pair(toSave.getName(), true),
+                TYPE_LABEL, new Pair(toSave.getType().toString(),true),
+                CURRENCY_LABEL, new Pair(toSave.getCurrency().getId(), true)
         );
 
         String id = Query.saveOrUpdate(TABLE_NAME, values);
@@ -86,9 +87,9 @@ public class AccountRepository implements BasicRepository<Account>{
 
             Account target = accounts.get(0);
             if(
-                target.getType() != AccountType.BANK &&
-                transaction.getType() == TransactionType.DEBIT &&
-                target.getBalance().getAmount().compareTo(transaction.getAmount()) < 0
+                    target.getType() != AccountType.BANK &&
+                            transaction.getType() == TransactionType.DEBIT &&
+                            target.getBalance().getAmount().compareTo(transaction.getAmount()) < 0
             ){
                 return target;
             }
@@ -104,12 +105,15 @@ public class AccountRepository implements BasicRepository<Account>{
             BigDecimal amountToAdd = transaction.getType() == TransactionType.CREDIT ? transaction.getAmount() : transaction.getAmount().negate();
             BigDecimal newBalance = target.getBalance().getAmount().add(amountToAdd);
             balanceRepository.save(new Balance(
-                null,
-                newBalance,
-                null
+                    null,
+                    newBalance,
+                    null
             ), target.getId());
             return findAll(accountFilter).get(0);
         }
         return null;
+
     }
+
+
 }
