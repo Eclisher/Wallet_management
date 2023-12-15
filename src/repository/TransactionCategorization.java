@@ -32,6 +32,4 @@ public class TransactionCategorization {
             PostgresqlConnection.closeConnection();
         }
     }
-
-
 }
