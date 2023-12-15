@@ -1,7 +1,7 @@
 # Wallet_management
  A wallet is an electronic purse that allows you to easily make payments in stores, online or on apps directly from your smartphone.
 
-### This project was realized by Ando Kamui and Eclisher 
+### This project was realized by Ando Kami and Eclisher 
 STD22007 and STD22050
  ## Steps to take
  - Clone this repository
