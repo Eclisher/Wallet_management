@@ -1,9 +1,9 @@
 package model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -25,55 +25,42 @@ public class Account {
         this.balance = balance;
         this.transactions = transactions;
     }
-
     public String getId() {
         return id;
     }
-
     public void setId(String id) {
         this.id = id;
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public AccountType getType() {
         return type;
     }
-
     public void setType(AccountType type) {
         this.type = type;
     }
-
     public Currency getCurrency() {
         return currency;
     }
-
     public void setCurrency(Currency currency) {
         this.currency = currency;
     }
-
     public Balance getBalance() {
         return balance;
     }
-
     public void setBalance(Balance balance) {
         this.balance = balance;
     }
-
     public List<Transaction> getTransactions() {
         return transactions;
     }
-
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
     }
-
     @Override
     public String toString() {
         return "Account{" +

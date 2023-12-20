@@ -1,3 +1,4 @@
+import mapper.DataMapper;
 import model.*;
 import repository.*;
 
@@ -6,6 +7,8 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -17,40 +20,40 @@ public class Main {
         TransactionRepository transactionRepository = new TransactionRepository();
         BalanceRepository balanceRepository = new BalanceRepository();
         AccountRepository accountRepository = new AccountRepository();
-
-/*
-        currencyRepository.findAll(null).forEach(System.out::println);
-        balanceRepository.findAll(null).forEach(System.out::println);
-        transactionRepository.findAll(null).forEach(System.out::println);
-        accountRepository.findAll(null).forEach(System.out::println);
-*/
-
-        Account account = accountRepository.doTransaction(new Transaction(
-                null,
-                "first transaction",
-                BigDecimal.valueOf(1000),
-                null,
-                TransactionType.DEBIT
-        ), "account_id1");
-
-        System.out.println("Account ID: " + account.getId());
-        System.out.println("Account Name: " + account.getName());
-        System.out.println(account);
-
-// Ajoutez d'autres propriétés que vous souhaitez afficher
-       // 5.a
-        try (Connection connection = PostgresqlConnection.getConnection()) {
-            String accountId = "account_id1";
-            Timestamp calculationDate = Timestamp.valueOf("2023-01-01 00:00:00");
-
-            double balance = calculateBalanceWithWeightedAverage(connection, accountId, calculationDate);
-            System.out.println("Balance with weighted average: " + balance);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            PostgresqlConnection.closeConnection();
-        }
+//
+///*
+//        currencyRepository.findAll(null).forEach(System.out::println);
+//        balanceRepository.findAll(null).forEach(System.out::println);
+//        transactionRepository.findAll(null).forEach(System.out::println);
+//        accountRepository.findAll(null).forEach(System.out::println);
+//*/
+//
+//        Account account = accountRepository.doTransaction(new Transaction(
+//                null,
+//                "first transaction",
+//                BigDecimal.valueOf(1000),
+//                null,
+//                TransactionType.DEBIT
+//        ), "account_id1");
+//
+//        System.out.println("Account ID: " + account.getId());
+//        System.out.println("Account Name: " + account.getName());
+//        System.out.println(account);
+//
+//// Ajoutez d'autres propriétés que vous souhaitez afficher
+//       // 5.a
+//        try (Connection connection = PostgresqlConnection.getConnection()) {
+//            String accountId = "account_id1";
+//            Timestamp calculationDate = Timestamp.valueOf("2023-01-01 00:00:00");
+//
+//            double balance = calculateBalanceWithWeightedAverage(connection, accountId, calculationDate);
+//            System.out.println("Balance with weighted average: " + balance);
+//
+//        } catch (SQLException e) {
+//            throw  new RuntimeException();
+//        } finally {
+//            PostgresqlConnection.closeConnection();
+//        }
         // 5.b
 //        try (Connection connection = PostgresqlConnection.getConnection()) {
 //            String accountId = "account_id2";
@@ -73,9 +76,144 @@ public class Main {
 //            System.out.println("Median balance: " + medianBalance);
 //
 //        } catch (SQLException e) {
-//            e.printStackTrace();
+//            throw  new RuntimeException()();
 //        } finally {
 //            PostgresqlConnection.closeConnection();
 //        }
+
+//        try {
+//            // Créer une nouvelle transaction
+//            Transaction transaction = new Transaction(
+//                    null,
+//                    "Sample Transaction",
+//                    BigDecimal.valueOf(500),
+//                    LocalDateTime.now(),
+//                    TransactionType.CREDIT
+//            );
+//
+//            // ID de compte pour lequel la transaction doit être effectuée
+//            String accountId = "account_id1";
+//
+//            // Effectuer la transaction et récupérer le compte mis à jour
+//            Account updatedAccount = accountRepository.doTransaction(transaction, accountId);
+//
+//            // Afficher les détails du compte mis à jour
+//            System.out.println("Updated Account ID: " + updatedAccount.getId());
+//            System.out.println("Updated Account Name: " + updatedAccount.getName());
+//            System.out.println("Updated Account Balance: " + updatedAccount.getBalance().getAmount());
+//
+//            // Exemple d'appel de la fonction calculateCategoryAmounts
+//            LocalDateTime startDateTime = LocalDateTime.of(2023, 1, 1, 0, 0);
+//            LocalDateTime endDateTime = LocalDateTime.of(2023, 12, 31, 23, 59);
+//
+//            List<CategoryAmount> categoryAmounts = accountRepository.calculateCategoryAmounts(accountId, startDateTime, endDateTime);
+//
+//            // Afficher les montants de catégorie calculés
+//            for (CategoryAmount categoryAmount : categoryAmounts) {
+//                System.out.println("Category: " + categoryAmount.getCategory() + ", Amount: " + categoryAmount.getAmount());
+//            }
+//
+//        } catch (SQLException e) {
+//            throw  new RuntimeException();
+//        }
+
+// 2)
+        try {
+            // Créer une nouvelle transaction
+            Transaction transaction = new Transaction(
+                    null,
+                    "Sample Transaction",
+                    BigDecimal.valueOf(500),
+                    LocalDateTime.now(),
+                    TransactionType.CREDIT
+            );
+
+            // ID de compte pour lequel la transaction doit être effectuée
+            String accountId = "account_id1";
+
+            // Effectuer la transaction et récupérer le compte mis à jour
+            Account updatedAccount = accountRepository.doTransaction(transaction, accountId);
+
+            // Afficher les détails du compte mis à jour
+            System.out.println("Updated Account ID: " + updatedAccount.getId());
+            System.out.println("Updated Account Name: " + updatedAccount.getName());
+            System.out.println("Updated Account Balance: " + updatedAccount.getBalance().getAmount());
+
+            // Exemple d'appel de la fonction calculateCategoryAmounts
+            LocalDateTime startDateTime = LocalDateTime.of(2023, 1, 1, 0, 0);
+            LocalDateTime endDateTime = LocalDateTime.of(2023, 12, 31, 23, 59);
+
+            List<CategoryAmount> categoryAmounts = accountRepository.calculateCategoryAmounts(accountId, startDateTime, endDateTime);
+
+            // Afficher les montants de catégorie calculés
+            System.out.println("Category Amounts:");
+            for (CategoryAmount categoryAmount : categoryAmounts) {
+                System.out.println("Category: " + categoryAmount.getCategory() + ", Amount: " + categoryAmount.getAmount());
+            }
+
+        } catch (SQLException e) {
+            // Gérer les exceptions spécifiques si nécessaire
+            throw  new RuntimeException();
+        }
+        // question 3
+        // Créer une instance de DataMapper
+
+//            e.printStackTrace();
+//        }
+
+// 2)
+//        try {
+//            // Créer une nouvelle transaction
+//            Transaction transaction = new Transaction(
+//                    null,
+//                    "Sample Transaction",
+//                    BigDecimal.valueOf(500),
+//                    LocalDateTime.now(),
+//                    TransactionType.CREDIT
+//            );
+//
+//            // ID de compte pour lequel la transaction doit être effectuée
+//            String accountId = "account_id1";
+//
+//            // Effectuer la transaction et récupérer le compte mis à jour
+//            Account updatedAccount = accountRepository.doTransaction(transaction, accountId);
+//
+//            // Afficher les détails du compte mis à jour
+//            System.out.println("Updated Account ID: " + updatedAccount.getId());
+//            System.out.println("Updated Account Name: " + updatedAccount.getName());
+//            System.out.println("Updated Account Balance: " + updatedAccount.getBalance().getAmount());
+//
+//            // Exemple d'appel de la fonction calculateCategoryAmounts
+//            LocalDateTime startDateTime = LocalDateTime.of(2023, 1, 1, 0, 0);
+//            LocalDateTime endDateTime = LocalDateTime.of(2023, 12, 31, 23, 59);
+//
+//            List<CategoryAmount> categoryAmounts = accountRepository.calculateCategoryAmounts(accountId, startDateTime, endDateTime);
+//
+//            // Afficher les montants de catégorie calculés
+//            System.out.println("Category Amounts:");
+//            for (CategoryAmount categoryAmount : categoryAmounts) {
+//                System.out.println("Category: " + categoryAmount.getCategory() + ", Amount: " + categoryAmount.getAmount());
+//            }
+//
+//        } catch (SQLException e) {
+//            // Gérer les exceptions spécifiques si nécessaire
+//            e.printStackTrace();
+//        }
+        // question 3
+//        // Créer une instance de DataMapper
+//        DataMapper dataMapper = new DataMapper();
+//
+//        // Définir les paramètres pour la fonction SQL (question 2)
+//        String accountId = "account_id1";
+//        LocalDate startDate = LocalDate.of(2023, 1, 1);
+//        LocalDate endDate = LocalDate.of(2023, 12, 31);
+//
+//        // Appeler la méthode de mapping des montants de catégorie
+//        Map<String, BigDecimal> categoryAmounts = dataMapper.mapCategoryAmounts(accountId, startDate, endDate);
+//
+//        // Afficher les montants de catégorie
+//        System.out.println("Category Amounts:");
+//        dataMapper.printCategoryAmounts(categoryAmounts);
+
     }
 }

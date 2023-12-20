@@ -36,17 +36,14 @@ public class BalanceCalculator {
                     }
                 }
             }
-
             if (totalWeight == 0) {
                 return 0; // Avoid division by zero
             }
-
             double weightedAverage = totalValue / totalWeight;
             return weightedAverage;
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            return 0; // Handle errors appropriately
+            throw  new RuntimeException();// Handle errors appropriately
         }
     }
 

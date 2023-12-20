@@ -9,15 +9,14 @@ public class PostgresqlConnection{
     final public static String DB_URL = System.getenv("DB_URL");
     final public static String DB_PASSWORD = System.getenv("DB_PASSWORD");
     final public static String DB_USERNAME = System.getenv("DB_USERNAME");
-
     public static Connection getConnection(){
         if(connection != null)
             return connection;
         try{
             connection = DriverManager.getConnection(
-                DB_URL,
-                DB_USERNAME,
-                DB_PASSWORD
+                    DB_URL,
+                    DB_USERNAME,
+                    DB_PASSWORD
             );
             return connection;
         }
@@ -26,7 +25,6 @@ public class PostgresqlConnection{
             throw new RuntimeException("Connection failed");
         }
     }
-
     public static void closeConnection(){
         if(connection != null){
             try {

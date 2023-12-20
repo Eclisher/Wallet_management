@@ -1,4 +1,3 @@
-
 package repository;
 
 import lombok.AllArgsConstructor;
@@ -16,21 +15,16 @@ public class Pair {
         this.word = word;
         this.quote = quote;
     }
-
     public String getWord() {
         return word;
     }
-
     public void setWord(String word) {
         this.word = word;
     }
-
     public boolean isQuote() {
         return quote;
     }
-
     public void setQuote(boolean quote) {
         this.quote = quote;
     }
 }
-

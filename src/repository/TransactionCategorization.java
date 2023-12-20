@@ -10,7 +10,7 @@ public class TransactionCategorization {
     private static final String COLUMN_CATEGORY_ID = "\"category_id\"";
     private static final String COLUMN_ID = "\"id\"";
 
-    public static void associerTransactionACategorie(String transactionId, String categoryId) {
+    private static void updateTransactionCategory(String transactionId, String categoryId) {
         String updateQuery = String.format("UPDATE %s SET %s = ? WHERE %s = ?", TABLE_TRANSACTION, COLUMN_CATEGORY_ID, COLUMN_ID);
 
         try (Connection connection = PostgresqlConnection.getConnection();
@@ -27,7 +27,7 @@ public class TransactionCategorization {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException();
         } finally {
             PostgresqlConnection.closeConnection();
         }
