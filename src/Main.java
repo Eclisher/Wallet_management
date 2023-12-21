@@ -1,6 +1,7 @@
 import mapper.DataMapper;
 import model.*;
 import repository.*;
+import service.TransactionService;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -118,43 +119,43 @@ public class Main {
 //        }
 
 // 2)
-        try {
-            // Créer une nouvelle transaction
-            Transaction transaction = new Transaction(
-                    null,
-                    "Sample Transaction",
-                    BigDecimal.valueOf(500),
-                    LocalDateTime.now(),
-                    TransactionType.CREDIT
-            );
-
-            // ID de compte pour lequel la transaction doit être effectuée
-            String accountId = "account_id1";
-
-            // Effectuer la transaction et récupérer le compte mis à jour
-            Account updatedAccount = accountRepository.doTransaction(transaction, accountId);
-
-            // Afficher les détails du compte mis à jour
-            System.out.println("Updated Account ID: " + updatedAccount.getId());
-            System.out.println("Updated Account Name: " + updatedAccount.getName());
-            System.out.println("Updated Account Balance: " + updatedAccount.getBalance().getAmount());
-
-            // Exemple d'appel de la fonction calculateCategoryAmounts
-            LocalDateTime startDateTime = LocalDateTime.of(2023, 1, 1, 0, 0);
-            LocalDateTime endDateTime = LocalDateTime.of(2023, 12, 31, 23, 59);
-
-            List<CategoryAmount> categoryAmounts = accountRepository.calculateCategoryAmounts(accountId, startDateTime, endDateTime);
-
-            // Afficher les montants de catégorie calculés
-            System.out.println("Category Amounts:");
-            for (CategoryAmount categoryAmount : categoryAmounts) {
-                System.out.println("Category: " + categoryAmount.getCategory() + ", Amount: " + categoryAmount.getAmount());
-            }
-
-        } catch (SQLException e) {
-            // Gérer les exceptions spécifiques si nécessaire
-            throw  new RuntimeException();
-        }
+//        try {
+//            // Créer une nouvelle transaction
+//            Transaction transaction = new Transaction(
+//                    null,
+//                    "Sample Transaction",
+//                    BigDecimal.valueOf(500),
+//                    LocalDateTime.now(),
+//                    TransactionType.CREDIT
+//            );
+//
+//            // ID de compte pour lequel la transaction doit être effectuée
+//            String accountId = "account_id1";
+//
+//            // Effectuer la transaction et récupérer le compte mis à jour
+//            Account updatedAccount = accountRepository.doTransaction(transaction, accountId);
+//
+//            // Afficher les détails du compte mis à jour
+//            System.out.println("Updated Account ID: " + updatedAccount.getId());
+//            System.out.println("Updated Account Name: " + updatedAccount.getName());
+//            System.out.println("Updated Account Balance: " + updatedAccount.getBalance().getAmount());
+//
+//            // Exemple d'appel de la fonction calculateCategoryAmounts
+//            LocalDateTime startDateTime = LocalDateTime.of(2023, 1, 1, 0, 0);
+//            LocalDateTime endDateTime = LocalDateTime.of(2023, 12, 31, 23, 59);
+//
+//            List<CategoryAmount> categoryAmounts = accountRepository.calculateCategoryAmounts(accountId, startDateTime, endDateTime);
+//
+//            // Afficher les montants de catégorie calculés
+//            System.out.println("Category Amounts:");
+//            for (CategoryAmount categoryAmount : categoryAmounts) {
+//                System.out.println("Category: " + categoryAmount.getCategory() + ", Amount: " + categoryAmount.getAmount());
+//            }
+//
+//        } catch (SQLException e) {
+//            // Gérer les exceptions spécifiques si nécessaire
+//            throw  new RuntimeException();
+//        }
         // question 3
         // Créer une instance de DataMapper
 
@@ -215,5 +216,27 @@ public class Main {
 //        System.out.println("Category Amounts:");
 //        dataMapper.printCategoryAmounts(categoryAmounts);
 
+        // 4)
+        // Créez une instance de TransactionService en lui passant l'instance de TransactionRepository
+        TransactionService transactionService = new TransactionService(transactionRepository);
+        // Supposons que vous voulez tester avec un autre compte et des dates différentes
+        String anotherAccountId = "account_id2";
+        LocalDateTime anotherStartDatetime = LocalDateTime.of(2023, 12, 10, 0, 0);
+        LocalDateTime anotherEndDatetime = LocalDateTime.of(2023, 12, 20, 23, 59);
+
+
+        try {
+            // Appel de la méthode pour obtenir le résumé des transactions par catégorie
+            List<CategoryAmount> categoryAmounts = transactionService.getTransactionSummary(anotherAccountId, anotherStartDatetime, anotherEndDatetime);
+
+            // Affichage des résultats
+            System.out.println("Category Summary for Another Account:");
+            for (CategoryAmount categoryAmount : categoryAmounts) {
+                System.out.println("Category: " + categoryAmount.getCategory() + ", Amount: " + categoryAmount.getAmount());
+            }
+        } catch (SQLException e) {
+            // Gérer l'exception de manière appropriée dans votre application
+            e.printStackTrace();
+        }
     }
 }

@@ -19,4 +19,12 @@ public class CategoryAmount {
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
+
+    @Override
+    public String toString() {
+        return "CategoryAmount{" +
+                "category='" + category + '\'' +
+                ", amount=" + amount +
+                '}';
+    }
 }

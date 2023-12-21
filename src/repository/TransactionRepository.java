@@ -6,8 +6,10 @@ import model.TransactionType;
 import model.CategoryAmount;
 
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,4 +86,25 @@ public class TransactionRepository implements BasicRepository<Transaction>{
         return null;
     }
 
+    public static List<Transaction> findTransactionsByDateRange(String accountId, LocalDateTime startDatetime, LocalDateTime endDatetime) throws SQLException {
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE "
+                + ACCOUNT_LABEL + " = ? AND "
+                + DATETIME_LABEL + " >= ? AND "
+                + DATETIME_LABEL + " <= ?";
+
+        try (PreparedStatement preparedStatement = PostgresqlConnection.getConnection().prepareStatement(query)) {
+            preparedStatement.setString(1, accountId);
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(startDatetime));
+            preparedStatement.setTimestamp(3, Timestamp.valueOf(endDatetime));
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Transaction> results = new ArrayList<>();
+
+            while (resultSet.next()) {
+                results.add(createInstance(resultSet));
+            }
+
+            return results;
+        }
+    }
 }
